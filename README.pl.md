@@ -60,6 +60,49 @@ Lub [pobierz archiwum ZIP z plikami](https://github.com/digininja/DVWA/archive/m
 
 ## Instalacja
 
+### Automatyczna instalacja 🛠️
+
+**Uwaga: to nie jest oficjalny skrypt DVWA, został napisany przez [@IamCarron](https://github.com/IamCarron) i jest utrzymywany w [DVWA-Script](https://github.com/IamCarron/DVWA-Script). Włożono wiele pracy w jego stworzenie i weryfikację, jednak zaleca się przejrzenie skryptu przed uruchomieniem go w systemie. Wszelkie błędy prosimy zgłaszać w [repozytorium DVWA-Script](https://github.com/IamCarron/DVWA-Script), a nie tutaj.**
+
+Skrypt automatycznej instalacji DVWA dla systemów opartych na Debianie (m.in. Kali, Ubuntu, Kubuntu, Linux Mint, Zorin OS...). Automatycznie instaluje wszystkie wymagane zależności, konfiguruje PHP/Apache oraz inicjalizuje tabele bazy danych gotowe do logowania (`admin` / `password`).
+
+**Uwaga: Ten skrypt wymaga uprawnień roota i jest dostosowany do systemów opartych na Debianie. Upewnij się, że uruchamiasz go jako root.**
+
+#### Wymagania instalacji
+
+- **System operacyjny:** Systemy oparte na Debianie (Kali, Ubuntu, Kubuntu, Linux Mint, Zorin OS itp.)
+- **Uprawnienia:** Uruchom jako użytkownik root
+
+#### Kroki instalacji
+
+##### Jednolinijkowiec (One-Liner)
+
+Pobierze skrypt instalacyjny napisany przez [@IamCarron](https://github.com/IamCarron) i uruchomi go automatycznie:
+
+```sh
+sudo bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/IamCarron/DVWA-Script/main/Install-DVWA.sh)"
+```
+
+##### Ręczne uruchomienie skryptu
+
+1. **Pobierz skrypt:**
+
+   ```sh
+   wget https://raw.githubusercontent.com/IamCarron/DVWA-Script/main/Install-DVWA.sh
+   ```
+
+2. **Nadaj uprawnienia do wykonywania:**
+
+   ```sh
+   chmod +x Install-DVWA.sh
+   ```
+
+3. **Uruchom jako root:**
+
+   ```sh
+   sudo ./Install-DVWA.sh
+   ```
+
 ### Filmy instruktażowe instalacji
 
 - [Instalacja DVWA na Kali w VirtualBox](https://www.youtube.com/watch?v=WkyDxNJkgQ4)

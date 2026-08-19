@@ -57,6 +57,49 @@ ya da [ZIP olarak indirebilirsiniz](https://github.com/digininja/DVWA/archive/ma
 
 ## Kurulum
 
+### Otomatik Kurulum 🛠️
+
+**Not: Bu resmi bir DVWA betiği değildir, [@IamCarron](https://github.com/IamCarron) tarafından yazılmıştır ve [DVWA-Script](https://github.com/IamCarron/DVWA-Script) adresinde sürdürülmektedir. Betiğin oluşturulmasında ve incelenmesinde çok emek harcanmıştır, ancak sisteminizde çalıştırmadan önce betiği incelemeniz önerilir. Lütfen hataları buraya değil, [DVWA-Script deposuna](https://github.com/IamCarron/DVWA-Script) bildirin.**
+
+Debian tabanlı sistemlerde (Kali, Ubuntu, Kubuntu, Linux Mint, Zorin OS vb.) DVWA için otomatik kurulum betiği. Gerekli tüm bağımlılıkları yükler, PHP/Apache ayarlarını yapılandırır ve veritabanı tablolarını giriş yapmaya hazır şekilde (`admin` / `password`) otomatik olarak başlatır.
+
+**Not: Bu betik root yetkileri gerektirir ve Debian tabanlı sistemler için uyarlanmıştır. Root kullanıcısı olarak çalıştırdığınızdan emin olun.**
+
+#### Kurulum Gereksinimleri
+
+- **İşletim Sistemi:** Debian tabanlı sistemler (Kali, Ubuntu, Kubuntu, Linux Mint, Zorin OS vb.)
+- **Yetkiler:** Root kullanıcısı olarak çalıştırın
+
+#### Kurulum Adımları
+
+##### Tek Satırlık Komut (One-Liner)
+
+Bu komut [@IamCarron](https://github.com/IamCarron) tarafından yazılan kurulum betiğini indirir ve otomatik olarak çalıştırır:
+
+```sh
+sudo bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/IamCarron/DVWA-Script/main/Install-DVWA.sh)"
+```
+
+##### Betiği Manuel Olarak Çalıştırma
+
+1. **Betiği indirin:**
+
+   ```sh
+   wget https://raw.githubusercontent.com/IamCarron/DVWA-Script/main/Install-DVWA.sh
+   ```
+
+2. **Betiğe çalıştırma yetkisi verin:**
+
+   ```sh
+   chmod +x Install-DVWA.sh
+   ```
+
+3. **Root olarak çalıştırın:**
+
+   ```sh
+   sudo ./Install-DVWA.sh
+   ```
+
 **Lütfen config/config.inc.php dosyasınızın var olduğundan emin olun. Yalnızca config.inc.php.dist dosyasına sahip olmak yeterli olmayacaktır. Bu dosyayı, ortamınıza uygun şekilde düzenlemeniz ve config.inc.php şeklinde yeniden adlandırmanız gerekecektir. [Windows, dosya uzantılarını gizleyebilir.](https://www.howtogeek.com/205086/beginner-how-to-make-windows-show-file-extensions/)**
 
 ### Kurulum Videoları

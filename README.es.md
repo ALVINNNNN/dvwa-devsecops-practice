@@ -57,6 +57,49 @@ O [descargar un ZIP con todos los archivos](https://github.com/digininja/DVWA/ar
 
 ## Instalación
 
+### Instalación Automatizada 🛠️
+
+**Nota, este no es un script oficial de DVWA, fue escrito por [@IamCarron](https://github.com/IamCarron) y se mantiene en [DVWA-Script](https://github.com/IamCarron/DVWA-Script). Se ha dedicado mucho trabajo a crearlo y revisarlo, pero se recomienda revisar el script antes de ejecutarlo en su sistema. Por favor, reporte cualquier error en el [repositorio de DVWA-Script](https://github.com/IamCarron/DVWA-Script), no aquí.**
+
+Un script de instalación automatizada para DVWA en sistemas basados en Debian, incluyendo Kali, Ubuntu, Kubuntu, Linux Mint, Zorin OS... Instala automáticamente todas las dependencias necesarias, configura PHP/Apache e inicializa las tablas de la base de datos listas para acceder (`admin` / `password`).
+
+**Nota: Este script requiere privilegios de root y está adaptado para sistemas basados en Debian. Asegúrese de ejecutarlo como usuario root.**
+
+#### Requisitos de Instalación
+
+- **Sistema Operativo:** Distribuciones basadas en Debian (Kali, Ubuntu, Kubuntu, Linux Mint, Zorin OS, etc.)
+- **Privilegios:** Ejecutar como usuario root
+
+#### Pasos de Instalación
+
+##### En una sola línea (One-Liner)
+
+Esto descargará el script de instalación escrito por [@IamCarron](https://github.com/IamCarron) y lo ejecutará automáticamente:
+
+```sh
+sudo bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/IamCarron/DVWA-Script/main/Install-DVWA.sh)"
+```
+
+##### Ejecución manual del script
+
+1. **Descargue el script:**
+
+   ```sh
+   wget https://raw.githubusercontent.com/IamCarron/DVWA-Script/main/Install-DVWA.sh
+   ```
+
+2. **Otorgue permisos de ejecución:**
+
+   ```sh
+   chmod +x Install-DVWA.sh
+   ```
+
+3. **Ejecute como root:**
+
+   ```sh
+   sudo ./Install-DVWA.sh
+   ```
+
 ### Videos de Instalación
 
 - [Instalando DVWA en Kali corriendo en VirtualBox](https://www.youtube.com/watch?v=WkyDxNJkgQ4)

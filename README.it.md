@@ -64,7 +64,7 @@ O [scaricare un ZIP dei file](https://github.com/digininja/DVWA/archive/master.z
 ## Installazione
 
 ### Installazione Automatica 🛠️
-**Nota, questo non è uno script ufficiale di DVWA, è stato scritto da [IamCarron](https://github.com/iamCarron/). Creare questo script è costato molto lavoro e, quando è stato creato, era sicuro, tuttavia è consigliato leggere lo script prima di eseguirlo alla cieca, per sicurezza. Per favore segnalare qualsiasi bug a [IamCarron](https://github.com/iamCarron/), non qui.**
+**Nota, questo non è uno script ufficiale di DVWA, è stato scritto da [@IamCarron](https://github.com/IamCarron) ed è mantenuto su [DVWA-Script](https://github.com/IamCarron/DVWA-Script). Creare questo script è costato molto lavoro e, quando è stato creato, era sicuro, tuttavia è consigliato leggere lo script prima di eseguirlo alla cieca, per sicurezza. Per favore segnalare qualsiasi bug a [DVWA-Script](https://github.com/IamCarron/DVWA-Script), non qui.**
 
 Uno script di configurazione automatica per DVWA su macchine basate su Debian, inclusa Kali, Ubunut, Kubuntu, Linux Mint, Zorin OS...
 
@@ -79,7 +79,7 @@ Uno script di configurazione automatica per DVWA su macchine basate su Debian, i
 
 #####  One-Liner
 
-Questo comando scarica lo script scritto da [@IamCarron](https://github.com/iamCarron/) e lo esegue automaticamente. Questo non sarebbe incluso qui se non avessimo fiducia nell'autore e nello script così com'era al momento della revisione, ma esiste sempre la possibilità che qualcuno agisca in modo malevolo. Pertanto, se non ti senti al sicuro nell'eseguire codice di terzi senza prima esaminarlo personalmente, segui la procedura manuale e potrai rivedere lo script una volta scaricato.
+Questo comando scarica lo script scritto da [@IamCarron](https://github.com/IamCarron) e lo esegue automaticamente. Questo non sarebbe incluso qui se non avessimo fiducia nell'autore e nello script così com'era al momento della revisione, ma esiste sempre la possibilità che qualcuno agisca in modo malevolo. Pertanto, se non ti senti al sicuro nell'eseguire codice di terzi senza prima esaminarlo personalmente, segui la procedura manuale e potrai rivedere lo script una volta scaricato.
 
 ```sh
 sudo bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/IamCarron/DVWA-Script/main/Install-DVWA.sh)"

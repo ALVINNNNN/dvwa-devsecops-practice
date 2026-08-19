@@ -63,6 +63,44 @@ git clone https://github.com/digininja/DVWA.git
 
 ## التثبيت
 
+### التثبيت التلقائي 🛠️
+
+**ملاحظة: هذا ليس برنامجًا نصيًا رسميًا لـ DVWA، بل تمت كتابته بواسطة [@IamCarron](https://github.com/IamCarron) وتتم صيانته في [DVWA-Script](https://github.com/IamCarron/DVWA-Script). تم بذل الكثير من الجهد في إنشائه ومراجعته، ومع ذلك يوصى بمراجعة النص البرمجي قبل تشغيله على نظامك. يرجى الإبلاغ عن أي أخطاء في [مستودع DVWA-Script](https://github.com/IamCarron/DVWA-Script) وليس هنا.**
+
+برنامج نصي للتثبيت التلقائي لـ DVWA على الأنظمة المعتمدة على Debian (بما في ذلك Kali وUbuntu وKubuntu وLinux Mint وZorin OS...). يقوم تلقائيًا بتثبيت جميع التبعيات المطلوبة، وتهيئة PHP وخادم الويب، وتهيئة جداول قاعدة البيانات لتكون جاهزة لتسجيل الدخول مباشرة (`admin` / `password`).
+
+**ملاحظة: يتطلب هذا البرنامج النصي صلاحيات root وهو مخصص للأنظمة المستندة إلى Debian. تأكد من تشغيله كمستخدم root.**
+
+#### خطوات التثبيت
+
+##### أمر السطر الواحد (One-Liner)
+
+يقوم هذا الأمر بتنزيل وتشغيل برنامج التثبيت النصي تلقائيًا:
+
+```sh
+sudo bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/IamCarron/DVWA-Script/main/Install-DVWA.sh)"
+```
+
+##### تشغيل البرنامج النصي يدويًا
+
+1. **تنزيل البرنامج النصي:**
+
+   ```sh
+   wget https://raw.githubusercontent.com/IamCarron/DVWA-Script/main/Install-DVWA.sh
+   ```
+
+2. **منح صلاحيات التنفيذ:**
+
+   ```sh
+   chmod +x Install-DVWA.sh
+   ```
+
+3. **التشغيل بصلاحيات root:**
+
+   ```sh
+   sudo ./Install-DVWA.sh
+   ```
+
 **يرجى التأكد من وجود ملف config / config.inc.php الخاص بك. إن وجود ملف config.inc.php.dist بمفرده لن يكون كافيًا ويجب عليك تعديله ليلائم بيئتك وإعادة تسميته إلى config.inc.php ، قد يخفي Windows امتدادات الملفات، يجب عليك إظهارها لتعديل امتداد الملف.](https://www.howtogeek.com/205086/beginner-how-to-make-windows-show-file-extensions/)**
 
 ### فيديو التثبيت
