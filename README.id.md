@@ -69,6 +69,49 @@ Atau [unduh arsip ZIP dari file-file](https://github.com/digininja/DVWA/archive/
 
 ## Instalasi
 
+### Instalasi Otomatis 🛠️
+
+**Catatan: ini bukan skrip resmi DVWA, skrip ini ditulis oleh [@IamCarron](https://github.com/IamCarron) dan dikelola di [DVWA-Script](https://github.com/IamCarron/DVWA-Script). Banyak upaya dilakukan untuk membuat dan memverifikasinya, namun disarankan untuk meninjau skrip sebelum menjalankannya di sistem Anda. Harap laporkan bug apa pun ke [repositori DVWA-Script](https://github.com/IamCarron/DVWA-Script), bukan di sini.**
+
+Skrip instalasi otomatis untuk DVWA pada sistem berbasis Debian (termasuk Kali, Ubuntu, Kubuntu, Linux Mint, Zorin OS...). Skrip ini menginstal semua dependensi yang diperlukan, mengonfigurasi PHP/Apache, dan secara otomatis menginisialisasi tabel database siap untuk login (`admin` / `password`).
+
+**Catatan: Skrip ini memerlukan hak akses root dan disesuaikan untuk sistem berbasis Debian. Pastikan Anda menjalankannya sebagai pengguna root.**
+
+#### Persyaratan Instalasi
+
+- **Sistem Operasi:** Sistem berbasis Debian (Kali, Ubuntu, Kubuntu, Linux Mint, Zorin OS, dll.)
+- **Hak Akses:** Jalankan sebagai pengguna root
+
+#### Langkah-langkah Instalasi
+
+##### Satu Baris (One-Liner)
+
+Perintah ini akan mengunduh skrip instalasi yang ditulis oleh [@IamCarron](https://github.com/IamCarron) dan menjalankannya secara otomatis:
+
+```sh
+sudo bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/IamCarron/DVWA-Script/main/Install-DVWA.sh)"
+```
+
+##### Menjalankan Skrip Secara Manual
+
+1. **Unduh skrip:**
+
+   ```sh
+   wget https://raw.githubusercontent.com/IamCarron/DVWA-Script/main/Install-DVWA.sh
+   ```
+
+2. **Beri izin eksekusi pada skrip:**
+
+   ```sh
+   chmod +x Install-DVWA.sh
+   ```
+
+3. **Jalankan sebagai root:**
+
+   ```sh
+   sudo ./Install-DVWA.sh
+   ```
+
 ### Video Instalasi
 
 - [Instalasi DVWA di Kali yang berjalan di VirtualBox](https://www.youtube.com/watch?v=WkyDxNJkgQ4)

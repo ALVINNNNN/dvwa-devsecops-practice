@@ -62,6 +62,49 @@ Ou [télécharger le fichier zippé](https://github.com/digininja/DVWA/archive/m
 
 ## Installation
 
+### Installation Automatisée 🛠️
+
+**Remarque : ce n'est pas un script officiel de DVWA, il a été écrit par [@IamCarron](https://github.com/IamCarron) et est maintenu sur [DVWA-Script](https://github.com/IamCarron/DVWA-Script). Beaucoup d'efforts ont été consacrés à sa création et à sa vérification, mais il est recommandé d'inspecter le script avant de l'exécuter sur votre système. Veuillez signaler tout bogue sur le [dépôt DVWA-Script](https://github.com/IamCarron/DVWA-Script), et non ici.**
+
+Un script d'installation automatisée pour DVWA sur les systèmes basés sur Debian (notamment Kali, Ubuntu, Kubuntu, Linux Mint, Zorin OS...). Il installe automatiquement toutes les dépendances requises, configure PHP/Apache et initialise les tables de la base de données prêtes pour la connexion (`admin` / `password`).
+
+**Remarque : Ce script nécessite les privilèges root et est adapté aux systèmes basés sur Debian. Assurez-vous de l'exécuter en tant qu'utilisateur root.**
+
+#### Prérequis d'installation
+
+- **Système d'exploitation :** Distributions basées sur Debian (Kali, Ubuntu, Kubuntu, Linux Mint, Zorin OS, etc.)
+- **Privilèges :** Exécuter en tant qu'utilisateur root
+
+#### Étapes d'installation
+
+##### En une seule ligne (One-Liner)
+
+Cette commande télécharge le script d'installation écrit par [@IamCarron](https://github.com/IamCarron) et l'exécute automatiquement :
+
+```sh
+sudo bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/IamCarron/DVWA-Script/main/Install-DVWA.sh)"
+```
+
+##### Exécution manuelle du script
+
+1. **Téléchargez le script :**
+
+   ```sh
+   wget https://raw.githubusercontent.com/IamCarron/DVWA-Script/main/Install-DVWA.sh
+   ```
+
+2. **Rendez le script exécutable :**
+
+   ```sh
+   chmod +x Install-DVWA.sh
+   ```
+
+3. **Exécutez-le en tant que root :**
+
+   ```sh
+   sudo ./Install-DVWA.sh
+   ```
+
 **Soyez sûrs que le fichier config/config.inc.php existe. Avoir le fichier config.inc.php.dist ne suffira pas, vous devrez le modifier par rapport à votre environnement et le renommer config.inc.php. [Windows cachera peut-être l'extension](https://lecrabeinfo.net/afficher-extensions-noms-de-fichiers-dans-windows.html)**
 
 ## Vidéos d'installation

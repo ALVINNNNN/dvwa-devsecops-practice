@@ -58,7 +58,7 @@ git clone https://github.com/digininja/DVWA.git
 
 ### 자동 설치 🛠️
 
-**참고: 이것은 공식 DVWA 스크립트가 아니며, [IamCarron](https://github.com/iamCarron/)에 의해 작성되었습니다. 스크립트를 작성하는 데 많은 노력이 들어갔으며, 작성 당시에는 악의적인 행동을 하지 않았지만, 시스템에서 무작정 실행하기 전에 스크립트를 검토하는 것이 좋습니다. 버그가 발견되면 이곳이 아닌 [IamCarron](https://github.com/iamCarron/)에게 보고해 주세요.**
+**참고: 이것은 공식 DVWA 스크립트가 아니며, [@IamCarron](https://github.com/IamCarron)에 의해 작성되었으며 [DVWA-Script](https://github.com/IamCarron/DVWA-Script)에서 유지 관리됩니다에 의해 작성되었습니다. 스크립트를 작성하는 데 많은 노력이 들어갔으며, 작성 당시에는 악의적인 행동을 하지 않았지만, 시스템에서 무작정 실행하기 전에 스크립트를 검토하는 것이 좋습니다. 버그가 발견되면 이곳이 아닌 [@IamCarron](https://github.com/IamCarron)에 의해 작성되었으며 [DVWA-Script](https://github.com/IamCarron/DVWA-Script)에서 유지 관리됩니다에게 보고해 주세요.**
 
 Debian 기반 머신(Kali, Ubuntu, Kubuntu, Linux Mint, Zorin OS 등)에서 DVWA를 자동으로 구성하는 스크립트입니다.
 

@@ -57,6 +57,49 @@ git clone https://github.com/digininja/DVWA.git
 
 ## 安装
 
+### 自动安装 🛠️
+
+**注意：这不是 DVWA 官方脚本，它由 [@IamCarron](https://github.com/IamCarron) 编写并维护在 [DVWA-Script](https://github.com/IamCarron/DVWA-Script)。在创建和审查该脚本时付出了很多努力，但仍建议在系统上运行之前自行审查代码。如有任何问题，请反馈至 [DVWA-Script 仓库](https://github.com/IamCarron/DVWA-Script)，而非此处。**
+
+适用于 Debian 系列系统（包括 Kali、Ubuntu、Kubuntu、Linux Mint、Zorin OS 等）的 DVWA 自动安装脚本。该脚本会自动安装所需依赖项、配置 PHP 和 Web 服务，并自动初始化数据库表，安装完成后可直接登录（`admin` / `password`）。
+
+**注意：此脚本需要 root 权限，专为基于 Debian 的系统量身定制。请确保以 root 用户身份运行。**
+
+#### 安装要求
+
+- **操作系统：** 基于 Debian 的系统（Kali、Ubuntu、Kubuntu、Linux Mint、Zorin OS 等）
+- **权限：** 以 root 用户身份执行
+
+#### 安装步骤
+
+##### 单行命令（One-Liner）
+
+运行以下单行命令即可自动下载并执行安装脚本：
+
+```sh
+sudo bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/IamCarron/DVWA-Script/main/Install-DVWA.sh)"
+```
+
+##### 手动运行脚本
+
+1. **下载脚本：**
+
+   ```sh
+   wget https://raw.githubusercontent.com/IamCarron/DVWA-Script/main/Install-DVWA.sh
+   ```
+
+2. **添加可执行权限：**
+
+   ```sh
+   chmod +x Install-DVWA.sh
+   ```
+
+3. **以 root 身份运行：**
+
+   ```sh
+   sudo ./Install-DVWA.sh
+   ```
+
 ### 安装视频
 
 - [在 kali 下的 VirtualBox 中安装DVWA](https://www.youtube.com/watch?v=WkyDxNJkgQ4)

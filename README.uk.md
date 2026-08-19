@@ -92,10 +92,10 @@ git clone https://github.com/digininja/DVWA.git
 ### Автоматичне встановлення 🛠️
 
 **Зверніть увагу: це не офіційний скрипт DVWA, він був
-написаний [IamCarron](https://github.com/iamCarron/). У створення цього скрипту було вкладено багато
+написаний [@IamCarron](https://github.com/IamCarron) і підтримується у [DVWA-Script](https://github.com/IamCarron/DVWA-Script). У створення цього скрипту було вкладено багато
 зусиль, і на момент створення він не містив нічого шкідливого, проте рекомендується перевірити його
 перед тим, як наосліп запускати у своїй системі, про всяк випадок. Будь ласка, повідомляйте про
-будь-які помилки [IamCarron](https://github.com/iamCarron/), а не сюди.**
+будь-які помилки [@IamCarron](https://github.com/IamCarron) і підтримується у [DVWA-Script](https://github.com/IamCarron/DVWA-Script), а не сюди.**
 
 Скрипт автоматичного налаштування DVWA для машин на базі Debian, зокрема Kali, Ubuntu, Kubuntu,
 Linux Mint, Zorin OS...

@@ -71,7 +71,7 @@ Hoặc [tải file zip](https://github.com/digininja/DVWA/archive/master.zip).
 
 ### Cài đặt tự động 🛠️
 
-**Lưu ý, đây không phải là script chính thức của DVWA, nó được viết bởi [IamCarron](https://github.com/iamCarron/). Rất nhiều nỗ lực đã được thực hiện để tạo script và khi nó được tạo, nó không làm bất cứ điều gì độc hại, tuy nhiên, để đề phòng, bạn nên xem lại script trước khi chạy nó một cách mù quáng trên hệ thống của mình. Vui lòng báo cáo bất kỳ lỗi nào cho [IamCarron](https://github.com/iamCarron/), chứ không phải reong repo này.**
+**Lưu ý, đây không phải là script chính thức của DVWA, nó được viết bởi [@IamCarron](https://github.com/IamCarron) và được duy trì tại [DVWA-Script](https://github.com/IamCarron/DVWA-Script). Rất nhiều nỗ lực đã được thực hiện để tạo script và khi nó được tạo, nó không làm bất cứ điều gì độc hại, tuy nhiên, để đề phòng, bạn nên xem lại script trước khi chạy nó một cách mù quáng trên hệ thống của mình. Vui lòng báo cáo bất kỳ lỗi nào cho [@IamCarron](https://github.com/IamCarron) và được duy trì tại [DVWA-Script](https://github.com/IamCarron/DVWA-Script), chứ không phải reong repo này.**
 
 Script cấu hình tự động cho DVWA trên các máy dựa trên Debian, bao gồm Kali, Ubuntu, Kubuntu, Linux Mint, Zorin OS...
 
