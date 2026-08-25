@@ -83,11 +83,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # DVWA ships as a single all-in-one image (Apache + PHP + MariaDB).
-      - name: Start target app
+      # Build from THIS checkout (not the public vulnerables/web-dvwa image),
+      # so that code fixes committed to the repo actually change what DAST
+      # scans. Plain `docker run` (not `compose.yml`) because compose.yml's
+      # pull_policy:always would otherwise re-pull the upstream image over
+      # our local build on every `up`.
+      - name: Build and start target app (from local source)
         run: |
-          docker run -d --name app -p 80:80 vulnerables/web-dvwa
-          for i in $(seq 1 40); do
+          docker network create dvwa-net
+          docker run -d --name db --network dvwa-net \
+            -e MYSQL_ROOT_PASSWORD=dvwa -e MYSQL_DATABASE=dvwa \
+            -e MYSQL_USER=dvwa -e MYSQL_PASSWORD=p@ssw0rd \
+            mariadb:10
+          docker build -t dvwa-local:ci .
+          docker run -d --name app --network dvwa-net -p 80:80 \
+            -e DB_SERVER=db -e DEFAULT_SECURITY_LEVEL=low \
+            dvwa-local:ci
+          for i in $(seq 1 60); do
             if curl -sf http://localhost/login.php > /dev/null; then echo "App up."; break; fi
             sleep 3
           done
@@ -105,12 +117,10 @@ jobs:
             --data-urlencode "user_token=$TOKEN" > /dev/null
           echo "Database initialized."
 
-      # DVWA uses session-cookie auth (not a bearer token), and defaults the
-      # security level to "impossible" until a "security" cookie says
-      # otherwise. So: log in as the seeded admin account, then explicitly
-      # set security=low so the scan actually reaches the vulnerable code
-      # paths instead of the pre-hardened "impossible" ones.
-      - name: Authenticate and set security level (optional)
+      # DVWA uses session-cookie auth (not a bearer token). The security
+      # level is already forced to "low" via DEFAULT_SECURITY_LEVEL above,
+      # so this just needs to log in as the seeded admin account.
+      - name: Authenticate (optional)
         run: |
           curl -s -c cookies.txt http://localhost/login.php -o login.html
           LOGIN_TOKEN=$(grep -oP "user_token'\s*value='\K[a-f0-9]+" login.html)
@@ -119,13 +129,6 @@ jobs:
             --data-urlencode "password=password" \
             --data-urlencode "Login=Login" \
             --data-urlencode "user_token=$LOGIN_TOKEN" -o /dev/null
-
-          curl -s -b cookies.txt -c cookies.txt http://localhost/security.php -o security.html
-          SEC_TOKEN=$(grep -oP "user_token'\s*value='\K[a-f0-9]+" security.html)
-          curl -s -b cookies.txt -c cookies.txt -X POST http://localhost/security.php \
-            --data-urlencode "security=low" \
-            --data-urlencode "seclev_submit=Submit" \
-            --data-urlencode "user_token=$SEC_TOKEN" -o /dev/null
 
           PHPSESSID=$(awk -F'\t' '$6=="PHPSESSID"{print $7}' cookies.txt | tail -1)
           SECURITY=$(awk -F'\t' '$6=="security"{print $7}' cookies.txt | tail -1)
@@ -163,4 +166,6 @@ jobs:
           path: zap-out/
       - name: Stop target app
         if: always()
-        run: docker rm -f app || true
+        run: |
+          docker rm -f app db || true
+          docker network rm dvwa-net || true
