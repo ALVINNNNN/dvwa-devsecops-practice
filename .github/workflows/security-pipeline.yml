@@ -105,20 +105,56 @@ jobs:
             --data-urlencode "user_token=$TOKEN" > /dev/null
           echo "Database initialized."
 
-      # Unauthenticated baseline scan. DVWA hides its vulnerable pages behind
-      # a session login (admin/password), so this pass mainly covers
-      # login.php, setup.php, static assets, and missing security headers.
-      # Authenticated coverage (logging in first, reusing the session cookie)
-      # is a documented next step - see zap-full-scan.yml / dast-targets.md
-      # for the pattern - left out here to keep this first pipeline reliable.
-      - name: OWASP ZAP baseline scan
+      # DVWA uses session-cookie auth (not a bearer token), and defaults the
+      # security level to "impossible" until a "security" cookie says
+      # otherwise. So: log in as the seeded admin account, then explicitly
+      # set security=low so the scan actually reaches the vulnerable code
+      # paths instead of the pre-hardened "impossible" ones.
+      - name: Authenticate and set security level (optional)
+        run: |
+          curl -s -c cookies.txt http://localhost/login.php -o login.html
+          LOGIN_TOKEN=$(grep -oP "user_token'\s*value='\K[a-f0-9]+" login.html)
+          curl -s -b cookies.txt -c cookies.txt -X POST http://localhost/login.php \
+            --data-urlencode "username=admin" \
+            --data-urlencode "password=password" \
+            --data-urlencode "Login=Login" \
+            --data-urlencode "user_token=$LOGIN_TOKEN" -o /dev/null
+
+          curl -s -b cookies.txt -c cookies.txt http://localhost/security.php -o security.html
+          SEC_TOKEN=$(grep -oP "user_token'\s*value='\K[a-f0-9]+" security.html)
+          curl -s -b cookies.txt -c cookies.txt -X POST http://localhost/security.php \
+            --data-urlencode "security=low" \
+            --data-urlencode "seclev_submit=Submit" \
+            --data-urlencode "user_token=$SEC_TOKEN" -o /dev/null
+
+          PHPSESSID=$(awk -F'\t' '$6=="PHPSESSID"{print $7}' cookies.txt | tail -1)
+          SECURITY=$(awk -F'\t' '$6=="security"{print $7}' cookies.txt | tail -1)
+          if [ -n "$PHPSESSID" ]; then
+            echo "Authenticated: got PHPSESSID (${#PHPSESSID} chars), security=$SECURITY"
+          else
+            echo "Login failed - scan will run unauthenticated."
+          fi
+          echo "DVWA_COOKIE=PHPSESSID=${PHPSESSID}; security=${SECURITY}" >> "$GITHUB_ENV"
+
+      # The auth cookie is loaded from a properties file via -configfile
+      # because ZAP's -z splits on spaces, which would break a "k=v; k=v" cookie.
+      - name: OWASP ZAP baseline scan (authenticated)
         run: |
           mkdir -p zap-out && chmod 777 zap-out
+          {
+            echo "replacer.full_list(0).description=auth"
+            echo "replacer.full_list(0).enabled=true"
+            echo "replacer.full_list(0).matchtype=REQ_HEADER"
+            echo "replacer.full_list(0).matchstr=Cookie"
+            echo "replacer.full_list(0).regex=false"
+            echo "replacer.full_list(0).replacement=${DVWA_COOKIE}"
+          } > zap-out/zap.prop
           docker run --rm --network host \
             -v ${{ github.workspace }}/zap-out:/zap/wrk/:rw \
             ghcr.io/zaproxy/zaproxy:stable \
             zap-baseline.py -t http://localhost/ -I \
-            -r zap-report.html -w zap-report.md -J zap-report.json || true
+            -r zap-report.html -w zap-report.md -J zap-report.json \
+            -z "-configfile /zap/wrk/zap.prop" || true
       - name: Upload ZAP report
         if: always()
         uses: actions/upload-artifact@v4
