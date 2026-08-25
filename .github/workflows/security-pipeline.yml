@@ -1,0 +1,116 @@
+# .github/workflows/security-pipeline.yml
+# SAST (Semgrep) + SCA (Trivy) + DAST (OWASP ZAP baseline) for DVWA.
+# Findings go to the Security tab (SARIF) when available; the DAST report is a
+# run artifact regardless.
+#
+# Note: this repo has no composer.json/composer.lock, so DVWA's PHP
+# dependencies aren't package-managed - the Trivy SCA job will run but has
+# little to find there. It still scans the filesystem for anything else
+# (vendored libs, misconfigs) it recognizes.
+
+name: Security Pipeline (SAST + SCA + DAST)
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write    # required to publish SARIF to the Security tab
+  actions: read
+
+jobs:
+  sast-semgrep:
+    name: SAST - Semgrep
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Semgrep
+        run: pip install semgrep
+      - name: Run Semgrep
+        run: |
+          semgrep scan \
+            --config p/default \
+            --config p/owasp-top-ten \
+            --config p/php \
+            --sarif --output semgrep.sarif || true
+      - uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: semgrep.sarif
+          category: semgrep
+
+  sca-trivy:
+    name: SCA - Trivy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
+            | sudo sh -s -- -b /usr/local/bin
+      - name: Run Trivy filesystem scan
+        run: |
+          trivy fs \
+            --format sarif --output trivy.sarif \
+            --severity CRITICAL,HIGH,MEDIUM . || true
+      - uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: trivy.sarif
+          category: trivy
+
+  dast-zap:
+    name: DAST - OWASP ZAP
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # DVWA ships as a single all-in-one image (Apache + PHP + MariaDB).
+      - name: Start target app
+        run: |
+          docker run -d --name app -p 80:80 vulnerables/web-dvwa
+          for i in $(seq 1 40); do
+            if curl -sf http://localhost/login.php > /dev/null; then echo "App up."; break; fi
+            sleep 3
+          done
+
+      # DVWA needs its database created once before most pages work, otherwise
+      # ZAP mostly finds a wall of DB-connection errors instead of real pages.
+      # This scrapes the anti-CSRF user_token from setup.php and submits the
+      # "Create / Reset Database" form, same as clicking the button by hand.
+      - name: Initialize DVWA database
+        run: |
+          curl -s -c cookies.txt http://localhost/setup.php -o setup.html
+          TOKEN=$(grep -oP "user_token'\s*value='\K[a-f0-9]+" setup.html)
+          curl -s -b cookies.txt -c cookies.txt -X POST http://localhost/setup.php \
+            --data-urlencode "create_db=Create / Reset Database" \
+            --data-urlencode "user_token=$TOKEN" > /dev/null
+          echo "Database initialized."
+
+      # Unauthenticated baseline scan. DVWA hides its vulnerable pages behind
+      # a session login (admin/password), so this pass mainly covers
+      # login.php, setup.php, static assets, and missing security headers.
+      # Authenticated coverage (logging in first, reusing the session cookie)
+      # is a documented next step - see zap-full-scan.yml / dast-targets.md
+      # for the pattern - left out here to keep this first pipeline reliable.
+      - name: OWASP ZAP baseline scan
+        run: |
+          mkdir -p zap-out && chmod 777 zap-out
+          docker run --rm --network host \
+            -v ${{ github.workspace }}/zap-out:/zap/wrk/:rw \
+            ghcr.io/zaproxy/zaproxy:stable \
+            zap-baseline.py -t http://localhost/ -I \
+            -r zap-report.html -w zap-report.md -J zap-report.json || true
+      - name: Upload ZAP report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-dast-report
+          path: zap-out/
+      - name: Stop target app
+        if: always()
+        run: docker rm -f app || true
