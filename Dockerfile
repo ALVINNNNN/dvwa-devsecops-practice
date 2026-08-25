@@ -19,6 +19,8 @@ RUN apt-get update \
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 COPY --chown=www-data:www-data . .
 COPY --chown=www-data:www-data config/config.inc.php.dist config/config.inc.php
+COPY docker/php-hardening.ini /usr/local/etc/php/conf.d/zz-security-hardening.ini
+COPY docker/apache-hardening.conf /etc/apache2/conf-enabled/zz-security-hardening.conf
 
 # This is configuring the stuff for the API
 RUN cd /var/www/html/vulnerabilities/api \
