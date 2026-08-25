@@ -231,7 +231,12 @@ jobs:
             --zap-json zap-out/zap-report.json \
             --max-steps 60 \
             --report remediation-report.md
-          if [ -n "$(git status --porcelain)" ]; then
+          # Remove the downloaded scan artifacts before checking for changes -
+          # they land as new untracked files in the workspace and would
+          # otherwise look like a "fix" even when Claude edited nothing.
+          rm -f semgrep.sarif trivy.sarif
+          rm -rf zap-out
+          if [ -n "$(git status --porcelain -- . ':!remediation-report.md')" ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
