@@ -169,3 +169,90 @@ jobs:
         run: |
           docker rm -f app db || true
           docker network rm dvwa-net || true
+
+  claude-remediate:
+    name: Claude Findings Remediation
+    needs: [sast-semgrep, sca-trivy, dast-zap]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for ANTHROPIC_API_KEY
+        id: gate
+        run: |
+          if [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "ANTHROPIC_API_KEY secret not set - skipping remediation stage."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-python@v5
+        if: steps.gate.outputs.skip == 'false'
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        if: steps.gate.outputs.skip == 'false'
+        run: pip install anthropic
+
+      - name: Download SAST/SCA SARIF
+        if: steps.gate.outputs.skip == 'false'
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*-sarif"
+          merge-multiple: true
+
+      - name: Download DAST report
+        if: steps.gate.outputs.skip == 'false'
+        uses: actions/download-artifact@v4
+        with:
+          name: zap-dast-report
+          path: zap-out
+
+      # Claude reads the actual DVWA source (not just the finding text) to
+      # decide, per finding: real bug, or an intentional vulnerabilities/ lab?
+      # This step only ever edits the local working tree - it never commits,
+      # pushes, or merges.
+      - name: Run Claude remediation
+        if: steps.gate.outputs.skip == 'false'
+        id: remediate
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAUDE_MODEL: claude-sonnet-5
+        run: |
+          python scripts/claude_remediate.py \
+            --semgrep-sarif semgrep.sarif \
+            --trivy-sarif trivy.sarif \
+            --zap-json zap-out/zap-report.json \
+            --max-steps 60 \
+            --report remediation-report.md
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Upload remediation report
+        if: always() && steps.gate.outputs.skip == 'false'
+        uses: actions/upload-artifact@v4
+        with:
+          name: claude-remediation-report
+          path: remediation-report.md
+
+      # No merge step: even a high-confidence SAST/DAST fix needs a human to
+      # look at the diff before it reaches master.
+      - name: Open Pull Request with fixes
+        if: steps.remediate.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "fix(security): Claude-remediated high-confidence findings"
+          branch: claude/security-remediation
+          delete-branch: true
+          title: "Claude: automated fixes for high-confidence security findings"
+          body-path: remediation-report.md
+          labels: security, automated, needs-review
