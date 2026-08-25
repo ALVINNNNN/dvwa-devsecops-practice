@@ -129,34 +129,20 @@ function &dvwaSessionGrab() {
 }
 
 
+// Hardening headers (X-Content-Type-Options, X-Frame-Options,
+// Permissions-Policy, Cross-Origin-Opener-Policy,
+// Cross-Origin-Resource-Policy) are set at the Apache layer - see
+// docker/apache-hardening.conf - so they cover every response, including
+// static assets that never execute this file. Content-Security-Policy and
+// Cross-Origin-Embedder-Policy are deliberately not set anywhere globally:
+// the XSS labs need injected inline <script> to execute to prove the flaw,
+// and some labs embed third-party content that wouldn't opt in to COEP.
 function dvwaPageStartup( $pActions ) {
-	dvwaSecurityHeadersSet();
-
 	if (in_array('authenticated', $pActions)) {
 		if( !dvwaIsLoggedIn()) {
 			dvwaRedirect( DVWA_WEB_PAGE_TO_ROOT . 'login.php' );
 		}
 	}
-}
-
-/*
- * Sets default hardening headers on every response. Deliberately excludes:
- *  - Content-Security-Policy: the XSS labs (reflected/stored/DOM) rely on
- *    injected inline <script> actually executing to demonstrate the flaw; a
- *    restrictive script-src would silently defeat that. The CSP lab itself
- *    (vulnerabilities/csp) sets its own header per security level regardless.
- *  - Cross-Origin-Embedder-Policy: would block the labs that embed
- *    third-party content (e.g. the Insecure CAPTCHA lab's external widget)
- *    unless that third party opts in, which is outside our control.
- * Any vulnerability page is still free to override these with its own
- * header() call afterwards, same as the CSP lab already does.
- */
-function dvwaSecurityHeadersSet() {
-	header( 'X-Content-Type-Options: nosniff' );
-	header( 'X-Frame-Options: SAMEORIGIN' );
-	header( 'Permissions-Policy: geolocation=(), microphone=(), camera=()' );
-	header( 'Cross-Origin-Opener-Policy: same-origin' );
-	header( 'Cross-Origin-Resource-Policy: same-origin' );
 }
 
 function dvwaLogin( $pUsername ) {
